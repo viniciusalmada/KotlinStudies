@@ -1,5 +1,3 @@
-
-
 # Estudos em Kotlin
 ## Tópicos importantes
 ### 1. Introdução
@@ -21,6 +19,7 @@ findViewById<Button>(R.id.btAgendar).setOnClickListener{agendar()}
 ```
 ### 2. Try Kotlin
 Try Kotlin é um site para rodar os códigos em Kotlin, pode ser acessado em <http://try.kotlinlang.org>. Basta digitar os códigos e rodar. Também é possível converter código Java para Kotlin.
+>**Dica**: faça o login com sua conta Google para salvar  os códigos
 
 ### 3. Funções `print` e `println`
 Comandos usados para imprimir no console:
@@ -64,7 +63,7 @@ var nome = "Ricardo"
 ```
 A principal diferença entre o uso do `var` e `val` é a possibilidade de alterar o valor da variável. Variáveis criadas com `val` são similares a variáveis `final` do Java, não podem ter seu valor alterado; o uso do `var` tem o objetivo contrário.
 ### 6. Conversão de tipos: `as` e `is`
-O modo de se fazer _cast_ em Kotlin faz uso da palavra-chave `as`. Caso a conversão não seja possível, será lançada uma _Exception_, para evitar isso, pode-se usar um _safe cast_ com `as?` que retorna `null` caso não aconteça a conversão.
+O modo de se fazer _cast_ em Kotlin faz uso da palavra-chave `as`. Caso a conversão não seja possível, será lançada uma `Exception`, para evitar isso, pode-se usar um _safe cast_ com `as?` que retorna `null` caso não aconteça a conversão.
 Para se fazer uma verificação do tipo de uma variável é utilizada o `is` como um operador booleano, é semelhante ao `instanceOf` do Java.
 ```kotlin
 // Código
@@ -73,7 +72,7 @@ fun main(args: Array<String>) {
     println(s as String)
     println(s as? Int)
     if (s is String){
-        println("$s é uma Strong") // smart cast
+        println("$s é uma String") // smart cast
     }
 }
 
@@ -91,7 +90,7 @@ fun main(args: Array<String>) {
    nome = null // Error
 }
 ```
-O código acima lança uma _Exception_ em tempo de compilação, pois a variável `nome` não pode receber um valor nulo. Para que esse código seja válido, a variável precisa indicar que pode receber valor nulo com o operador `?`:
+O código acima lança uma `Exception` em tempo de compilação, pois a variável `nome` não pode receber um valor nulo. Para que esse código seja válido, a variável precisa indicar que pode receber valor nulo com o operador `?`:
 ```kotlin
 // Código
 fun main(args: Array<String>) {
@@ -130,5 +129,71 @@ fun main(args: Array<String>) {
 }
 
 // Resultado
-
+Olá Ricardo
+Olá null
 ```
+Uma outra opção viável e com menos código para esse problema de verificação de dado nulo é utilizar o operador `?` (_Safe call_) na variável que pode conter o valor `null`, sem lançar qualquer `Exception` :
+```kotlin
+// Código
+fun main(args: Array<String>) {
+   var nome:String? = "Ricardo"
+   println("Olá $nome")
+   nome = null // Ok
+   println("Olá $nome")
+   println("$nome possui ${nome?.lenght} caracteres")
+}
+
+// Resultado
+Olá Ricardo
+Olá null
+null possui null caracteres
+```
+Na execução, ao chegar nesta linha `${nome?.lenght}`, é verificado que a variável é nula, o restante não é chamado, daí o porquê do nome do operador: _Safe Call_.
+No entanto, caso o programador queira "forçar" a chamada de um método em cima de uma variável possivelmente nula, este deve usar o operador `!!` que, se usado da forma errada, lança uma `KotlinNullPointerException`, como no exemplo abaixo:
+```kotlin
+// Código
+fun main(args: Array<String>) {
+   var nome:String? = "Ricardo"
+   println("Olá $nome")
+   nome = null // Ok
+   println("Olá $nome")
+   println("$nome possui ${nome!!.lenght} caracteres") 
+   // KotlinNullPointerException
+}
+```
+### 8. Operador ternário e Elvis
+O operador ternário serve para fazer um tratamento condicional mais simplificado, em **Kotlin**, é utilizado o `if/else`.
+```kotlin
+// Código
+fun parOuImpar(a: Int): String{
+	return if (a % 2 == 0) "par" else "impar" 
+}
+
+fun main(args: Array<String>){
+	println(parOuImpar(1))
+	println(parOuImpar(2))
+}
+
+// Resultado
+impar
+par
+```
+Um operador diferente em **Kotlin** é o _Elvis_ que serve para responder a pergunta: "Se o valor da variável não for nulo, use o seu próprio valor, caso contrário, use outro", é bastante útil em algumas situações, sua representação é `?:`
+```kotlin
+// Código
+fun main(args: Array<String>){
+	println(enviarEmail("Ricardo"))
+	println(enviarEmail("Ricardo","Welcome"))
+}
+
+fun enviarEmail(usuario: String, titulo: String? = null): String{
+	val s = titulo?: "Bem Vindo"
+	return "$s $usuario"
+}
+
+// Resultado
+Bem Vindo Ricardo
+Welcome Ricardo
+```
+Perceba que o parâmetro `titulo` é declarado como `String?` e é inicializado com valor `null`, essa característica faz com seja opcional o uso do segundo argumento ao chamar a função.
+### 9. Funções

@@ -1,9 +1,12 @@
 # Estudos em Kotlin
 ## Tópicos importantes
+
 ### 1. Introdução
+
 **Kotlin** é uma linguagem de programação criada pela _JetBrains_, lançada em 2011 para ser usada dentro da empresa em seus processos internos. 
 No _Google I/O 2017_, a **Kotlin** foi oficialmente anunciada como linguagem de programação oficial para o desenvolvimento de aplicativos Android.
 Tem uma sintaxe muito simples e agradável, que é compilada para ser executada na _JVM (Java Virtual Machine)_ e por isso possui 100% de interoperabilidade com a linguagem Java, mas com a vantagem de usar muito menos código.
+
 ```Java
 View btAgenda = findViewById(R.id.btAgenda);
 btAgenda.setOnClickListener(new View.OnClickListener() {
@@ -196,4 +199,114 @@ Bem Vindo Ricardo
 Welcome Ricardo
 ```
 Perceba que o parâmetro `titulo` é declarado como `String?` e é inicializado com valor `null`, essa característica faz com seja opcional o uso do segundo argumento ao chamar a função.
+
 ### 9. Funções
+
+Funções em **Kotlin** são estruturas de código que fazem determinada(s) ação(ões) sendo opcional o uso de parâmetros de entrada e retornos de saída, são como os métodos no _Java_. Confira abaixo como é a sintaxe de uma função em **Kotlin**:
+
+```kotlin
+fun test(param1: Tipo1, param2: Tipo2, ...): TipoRetorno {
+    // Código
+}
+```
+Para maior esclarecimento, veja a implementação de duas funções:
+```kotlin
+fun main(args: Array<String>){
+    var nome = "Ricardo"
+    imprimir(nome)
+    val soma = somar(2,3)
+    imprimir("Soma: $soma")
+}
+
+fun imprimir(s: String): Unit {
+    println(s)
+}
+
+fun somar(n1: Int, n2: Int): Int{
+    return n1 + n2
+}
+
+// Resultado
+Ricardo
+Soma: 5
+```
+
+Na função `imprimir()` o tipo de retorno é `Unit` que significa "sem retorno", semelhante ao `Void` do _Java_, essa colocação pode, inclusive, ser omitida na implementação, ficando dessa forma:
+
+```kotlin
+fun imprimir(s: String){
+	println(s)
+}
+```
+Já a função `somar()` possui dois números (tipo `Int`) como parâmetro de entrada e retorna um `Int`, no escopo da função esse retorno é indicado pela palavra-chave `return`.
+
+Na implementação de funções em **Kotlin** há uma simplificação, caso a função possua apenas uma linha no escopo, ela pode ser escrita na forma de uma função _Single-Expression_ que dispensa o uso de blocos de código `{}`. Para exemplificar, as funções `somar()` e `imprimir()` poderiam ser assim escritas, na forma _Single-Expression_:
+```kotlin
+fun imprimir(s: String) = println(s)
+
+fun somar(n1: Int, n2: Int) = n1 + n2
+```
+### 10. Funções - _Default Value_
+Para evitar a sobrecarga de métodos com verificação de valores padrões, estes podem vir "setados" direto na definição dos argumentos. O código abaixo faz a conversão de um `String` em `Int`:
+```kotlin
+// Código
+fun main(args: Array<String>){
+	var i = getInteiro("5")
+	println(i)
+	i = getInteiro(null)
+	println(i)
+	i = getInteiro(null, 2)
+	println(i)
+}
+
+fun getInteiro(s: String?, defaultValue: Int = 0): Int{
+	if(s != null){
+		return s.toInt()
+	}
+	return defaultValue
+}
+
+// Resultado
+5
+0
+2
+```
+A definição de um argumento como _Default Value_ também torna opcional o uso desse argumento na chamada das funções.
+### 11. Funções - _Named Params_
+Para facilitar a escrita dos argumentos com a possibilidade de, ao chamar a função, designar a qual parâmetro aquele valor dado, deve ser definido. Veja o exemplo:
+```kotlin
+// Código
+fun main(args: Array<String>){
+	teste("Ricardo", "Lecheta", "Novatec")
+	teste("Ricardo")
+	teste("Ricardo", editora = "Novatec")
+}
+
+fun teste(nome: String?, sobrenome: String? = null, editora: String?= null){
+	println("Nome: $nome, Sobrenome: $sobrenome, Editora: $editora)
+}
+
+// Resultado
+Nome: Ricardo, Sobrenome: Lecheta, Editora: Novatec
+Nome: Ricardo, Sobrenome: null, Editora: null
+Nome: Ricardo, Sobrenome: null, Editora: Novatec
+```
+### 12. Função com _varargs_
+Um recurso usado em muitas linguagens no caso de uma função poder receber um número indefinido de argumentos é usar o _varargs_, que pode receber um ou mais parâmetros separados por vírgula, em **Kotlin**, isso é feito usando a palavra reservada `varargs`:
+```kotlin
+// Código
+fun toList(varargs args: String): List<String>{
+	val list = ArrayList<String>()
+	for (s in args)
+		list.add(s)
+	return list
+}
+
+fun main(args: Array<String>) {
+	val list = toList("Ricardo", "Lecheta", "Rodrigues")
+	println(list)
+}
+
+// Resultado
+[Ricardo, Lecheta, Rodrigues]
+```
